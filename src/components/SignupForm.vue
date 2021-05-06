@@ -11,6 +11,7 @@
 
 <script>
 import { ref } from 'vue'
+import useSignup from '../composables/useSignup'
 
 export default {
   setup() {
@@ -19,11 +20,18 @@ export default {
     const password = ref('')
     const passwordConfirmation = ref('')
 
-    const handleSubmit = () => {
-      console.log({ name, email, password, passwordConfirmation })
+    const { error, signup } = useSignup()
+
+    const handleSubmit = async () => {
+      await signup(name.value, email.value, password.value, passwordConfirmation.value)
+
+      if (!error.value) {
+        console.log(11111, error.value)
+        // context.emit('signup')
+      }
     }
 
     return { name, email, password, passwordConfirmation, handleSubmit }
-  }
+  },
 }
 </script>
