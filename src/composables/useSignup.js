@@ -26,7 +26,7 @@ const signup = async (name, email, password, passwordConfirmation) => {
     return res
   } catch (err) {
     console.log(err)
-    error.value = 'アカウント登録できませんでした'
+    error.value = 'アカウントを登録できませんでした'
   }
 }
 
