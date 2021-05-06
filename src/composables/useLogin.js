@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ref } from 'vue'
+import setItem from '../auth/setItem'
 
 const error = ref(null)
 
@@ -19,7 +20,7 @@ const login = async (email, password) => {
     error.value = null
 
     console.log("成功！")
-    console.log(res.headers)
+    setItem(res.headers, res.data.data.name)
 
     return res
   } catch (err) {
