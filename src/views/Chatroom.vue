@@ -1,13 +1,13 @@
 <template>
-  <p>チャットルーム</p>
+  <div class="container">
+    <navbar />
+  </div>
 </template>
 
 <script>
-export default {
+import navbar from '../components/Navbar'
 
+export default {
+  components: { navbar }
 }
 </script>
-
-<style>
-
-</style>
