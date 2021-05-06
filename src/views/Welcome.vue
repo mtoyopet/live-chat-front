@@ -2,11 +2,11 @@
   <div class="container welcome">
     <p>ようこそ</p>
     <div v-if="shouldShowLoginForm">
-      <login-form />
+      <login-form @login="redirectToChatRoom" />
       <p>アカウントがありませんか？アカウント登録は<span @click="shouldShowLoginForm = false">こちら</span>をクリック</p>
     </div>
     <div v-if="!shouldShowLoginForm">
-      <signup-form />
+      <signup-form @signup="redirectToChatRoom" />
       <p>アカウントをお持ちですか？ログインは<span @click="shouldShowLoginForm = true">こちら</span>をクリック</p>
     </div>
   </div>
@@ -16,13 +16,19 @@
 import LoginForm from '../components/LoginForm.vue'
 import SignupForm from "../components/SignupForm.vue"
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default  {
   components: { SignupForm, LoginForm },
   setup() {
     const shouldShowLoginForm = ref(true)
+    const router = useRouter()
 
-    return { shouldShowLoginForm }
+    const redirectToChatRoom = () => {
+      router.push({ name: 'Chatroom' })
+    }
+
+    return { shouldShowLoginForm, redirectToChatRoom }
   }
 }
 </script>
