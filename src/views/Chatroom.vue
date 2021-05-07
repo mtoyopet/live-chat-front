@@ -1,15 +1,17 @@
 <template>
   <div class="container">
     <navbar @redirectToWelcome="redirectToWelcome" />
+    <chat-window />
   </div>
 </template>
 
 <script>
-import navbar from '../components/Navbar'
+import Navbar from '../components/Navbar'
+import ChatWindow from '../components/ChatWindow'
 import { useRouter } from 'vue-router'
 
 export default {
-  components: { navbar },
+  components: { Navbar, ChatWindow },
   setup() {
     const router = useRouter()
     const redirectToWelcome = () => {
