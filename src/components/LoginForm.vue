@@ -1,6 +1,6 @@
 <template>
   <h2>ログイン</h2>
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="login">
     <input type="email" required placeholder="メールアドレス" v-model="email">
     <input type="password" required placeholder="パスワード" v-model="password">
     <div class="error">{{ error }}</div>
@@ -9,26 +9,40 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import useLogin from '../composables/useLogin'
 
 export default {
-  emits: ["login"],
-  setup(props, context) {
-    const email = ref('')
-    const password = ref('')
+  emits: ["redirectToChatRoom"],
+  data () {
+    return {
+      email: '',
+      password: '',
+      error: null
+    }
+  },
+  methods: {
+    async login() {
+      try {
+        const res = await axios.post('http://localhost:3000/auth/sign_in', { 
+          email: this.email,
+          password: this.password,
+          }
+        )
 
-    const { error, login } = useLogin()
+        if (!res) {
+          throw new Error('ログインに失敗しました')
+        }
 
-    const handleSubmit = async () => {
-      await login(email.value, password.value)
+        if (!error) {
+          setItem(res.headers, res.data.data.name)
+          context.emit('redirectToChatRoom')
 
-      if (!error.value) {
-        context.emit('login')
+        }
+
+        return res
+      } catch (err) {
+        this.error = 'メールアドレスかパスワードが違います'
       }
     }
-
-    return { email, password, handleSubmit, error }
   }
 }
 </script>

@@ -11,28 +11,43 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import useSignup from '../composables/useSignup'
 
 export default {
-  emits: ['signup'],
-  setup(props, context) {
-    const name = ref('')
-    const email = ref('')
-    const password = ref('')
-    const passwordConfirmation = ref('')
+  emits: ['redirectToChatRoom'],
+  data () {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      error: null
+    }
+  },
+  methods: {
+    async signup () {
+      try {
+        const res = await axios.post('http://localhost:3000/auth', { 
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          password_confirmation: this.passwordConfirmation
+          }
+        )
 
-    const { error, signup } = useSignup()
+        if (!res) {
+          throw new Error('アカウント登録に失敗しました')
+        }
 
-    const handleSubmit = async () => {
-      await signup(name.value, email.value, password.value, passwordConfirmation.value)
+        if (!error) {
+          setItem(res.headers, res.data.data.name)
+          context.emit('redirectToChatRoom')
+        }
 
-      if (!error.value) {
-        context.emit('signup')
+        return res
+      } catch (err) {
+        this.error = 'アカウントを登録できませんでした'
       }
     }
-
-    return { name, email, password, passwordConfirmation, handleSubmit, error }
-  },
+  }
 }
 </script>
