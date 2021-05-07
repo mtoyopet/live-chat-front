@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <navbar @logout="redirectToWelcome" />
+    <navbar @redirectToWelcome="redirectToWelcome" />
   </div>
 </template>
 

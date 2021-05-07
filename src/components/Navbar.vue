@@ -9,24 +9,42 @@
 </template>
 
 <script>
-import useLogout from '../composables/useLogout'
-
 export default {
-  emits: ['logout'],
-  setup(props, context) {
-    const name = window.localStorage.getItem('name')
-    const email = window.localStorage.getItem('uid')
-    const { error, logout } = useLogout()
+  emits: ['redirectToWelcome'],
+  data () {
+    return {
+      name: window.localStorage.getItem('name'),
+      email: window.localStorage.getItem('uid'),
+      error: null
+    }
+  },
+  methods: {
+    async logout () {
+      try {
+        const res = await axios.delete('http://localhost:3000/auth/sign_out', {
+          headers: {
+            uid: this.email,
+            "access-token": window.localStorage.getItem('access-token'),
+            client:window.localStorage.getItem('client')
+          }
+        })
+      
+        if (!res) { 
+          new Error('ログアウトできませんでした')
+        }
 
-    const handleClick = async () => {
-      await logout()
-      if (!error.value) {
-        console.log("ログアウトしました")
-        context.emit('logout')
+        if (!error.value) {
+          console.log("ログアウトしました")
+          window.localStorage.removeItem('access-token')
+          window.localStorage.removeItem('client')
+          window.localStorage.removeItem('uid')
+          window.localStorage.removeItem('name')  
+          context.emit('redirectToWelcome')
+        }
+      } catch (err) {
+        this.error = 'ログアウトできませんでした'
       }
     }
-
-    return { name, email, handleClick }
   }
 }
 </script>
