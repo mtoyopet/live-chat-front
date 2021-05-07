@@ -1,25 +1,39 @@
-// import axios from 'axios'
-// import { router } from 'vue-router'
-// const validate = () => {
-//   axios.get('http://localhost:3000/auth/validate_token', {
-//     headers: {
-//       uid: window.localStorage.getItem('uid'),
-//       "access-token": window.localStorage.getItem('access-token'),
-//       client:window.localStorage.getItem('client'),
-//     }
-//   }).then(res => {
+import axios from 'axios'
+import { ref } from 'vue' 
 
-//   }).error(err => {
-//     window.localStorage.removeItem('uid')
-//     window.localStorage.removeItem('access-token')
-//     window.localStorage.removeItem('client')
-//     window.localStorage.removeItem('name')
-//     router.push({ name: 'Welcome' })
+const error = ref(null)
 
-//   })
+const validate = async () => {
+  error.value = null
+  try {
+    const res = await axios.get('http://localhost:3000/auth/validate_token', {
+      headers: {
+        uid: window.localStorage.getItem('uid'),
+        "access-token": window.localStorage.getItem('access-token'),
+        client:window.localStorage.getItem('client'),
+      }
+    })
 
-//   if (res.status === 401) {
-//   }
-// }
+    if (!res) {
+      throw new Error('認証に失敗しました')
+    }
 
-// export default validate
+    error.value = null
+
+    return res
+  } catch (err) {
+    error.value = '認証できませんでした'
+
+    window.localStorage.removeItem('uid')
+    window.localStorage.removeItem('access-token')
+    window.localStorage.removeItem('client')
+    window.localStorage.removeItem('name')
+
+  }
+}
+
+const useValidate = () => {
+  return { error, validate }
+}
+
+export default useValidate
