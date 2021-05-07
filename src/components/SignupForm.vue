@@ -1,6 +1,6 @@
 <template>
   <h2>アカウントを登録</h2>
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="signup">
     <input type="text" required placeholder="名前" v-model="name">
     <input type="email" required placeholder="メールアドレス" v-model="email">
     <input type="password" required placeholder="パスワード" v-model="password">
@@ -11,8 +11,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+import setItem from '../auth/setItem'
 
-export default {
+export default {  
   emits: ['redirectToChatRoom'],
   data () {
     return {
@@ -38,9 +40,9 @@ export default {
           throw new Error('アカウント登録に失敗しました')
         }
 
-        if (!error) {
+        if (!this.error) {
           setItem(res.headers, res.data.data.name)
-          context.emit('redirectToChatRoom')
+          this.$emit('redirectToChatRoom')
         }
 
         return res

@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import setItem from '../auth/setItem'
 
 export default {
   emits: ["redirectToChatRoom"],
@@ -32,14 +34,15 @@ export default {
           throw new Error('ログインに失敗しました')
         }
 
-        if (!error) {
+        if (!this.error) {
           setItem(res.headers, res.data.data.name)
-          context.emit('redirectToChatRoom')
+          this.$emit('redirectToChatRoom')
 
         }
 
         return res
       } catch (err) {
+        console.log(err)
         this.error = 'メールアドレスかパスワードが違います'
       }
     }

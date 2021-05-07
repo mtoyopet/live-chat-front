@@ -4,11 +4,13 @@
       <p>こんにちは、{{ name }}さん</p>
       <p class="email">現在、{{ email }}でログイン中です</p>
     </div>
-    <button @click="handleClick">ログアウト</button>
+    <button @click="logout">ログアウト</button>
   </nav>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   emits: ['redirectToWelcome'],
   data () {
@@ -33,13 +35,13 @@ export default {
           new Error('ログアウトできませんでした')
         }
 
-        if (!error.value) {
+        if (!this.error) {
           console.log("ログアウトしました")
           window.localStorage.removeItem('access-token')
           window.localStorage.removeItem('client')
           window.localStorage.removeItem('uid')
           window.localStorage.removeItem('name')  
-          context.emit('redirectToWelcome')
+          this.$emit('redirectToWelcome')
         }
       } catch (err) {
         this.error = 'ログアウトできませんでした'
