@@ -1,12 +1,15 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import _axios from 'axios'
-import _VueAxios from 'vue-axios'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import validate from './auth/validate'
 
 import './assets/main.css'
 
 createApp(App).use(router).mount('#app')
+
+// validate()
 
 // const token = localStorage
 // console.log(token, 11111)

@@ -1,8 +1,7 @@
 <template>
-  チャットルーム！
-  <!-- <div class="container"> -->
-    <!-- <navbar /> -->
-  <!-- </div> -->
+  <div class="container">
+    <navbar />
+  </div>
 </template>
 
 <script>
