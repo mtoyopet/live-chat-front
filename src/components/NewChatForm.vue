@@ -39,6 +39,9 @@ export default {
 
       this.message = ''
     }
+  },
+  beforeDestory () {
+    channel.unsubscribe()
   }
 }
 </script>

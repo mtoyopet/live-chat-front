@@ -32,12 +32,12 @@ export default {
   },
   computed: {
     formattedMessages () {
-      if (this.messages.length) {
-        return this.messages.map(message => {
-          let time = formatDistanceToNow(new Date(message.created_at), { locale: ja })
-          return { ...message, created_at: time }
-        })
-      }
+      if (!this.messages.length) { return [] }
+
+      return this.messages.map(message => {
+        let time = formatDistanceToNow(new Date(message.created_at), { locale: ja })
+        return { ...message, created_at: time }
+      })
     }
   },
   methods: {
@@ -55,9 +55,9 @@ export default {
           new Error('メッセージ一覧を取得できませんでした')
         }
 
-
         this.messages = res.data 
       } catch (err) {
+        console.log(err)
         this.error = 'メッセージ一覧を取得できませんでした'
       }
     },
