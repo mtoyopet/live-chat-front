@@ -27,6 +27,8 @@ export default {
   },
   methods: {
     async signup () {
+      this.error = null
+
       try {
         const res = await axios.post('http://localhost:3000/auth', { 
           name: this.name,
@@ -44,6 +46,7 @@ export default {
           setItem(res.headers, res.data.data.name)
           this.$emit('redirectToChatRoom')
         }
+        this.error = null
 
         return res
       } catch (err) {

@@ -24,6 +24,7 @@ export default {
   methods: {
     async login() {
       try {
+        this.error = null
         const res = await axios.post('http://localhost:3000/auth/sign_in', { 
           email: this.email,
           password: this.password,
@@ -37,9 +38,9 @@ export default {
         if (!this.error) {
           setItem(res.headers, res.data.data.name)
           this.$emit('redirectToChatRoom')
-
         }
 
+        this.error = null
         return res
       } catch (err) {
         console.log(err)

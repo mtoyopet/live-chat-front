@@ -15,20 +15,18 @@
 <script>
 import LoginForm from '../components/LoginForm.vue'
 import SignupForm from "../components/SignupForm.vue"
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 export default  {
   components: { SignupForm, LoginForm },
-  setup() {
-    const shouldShowLoginForm = ref(true)
-    const router = useRouter()
-
-    const redirectToChatRoom = () => {
-      router.push({ name: 'Chatroom' })
+  data () {
+    return {
+      shouldShowLoginForm: true
     }
-
-    return { shouldShowLoginForm, redirectToChatRoom }
+  },
+  methods: {
+    redirectToChatRoom () {
+      this.$router.push({ name: 'Chatroom' })
+    }
   }
 }
 </script>

@@ -20,12 +20,11 @@ export default {
       error: null,
     }
   },
-  created () {
+  mounted () {
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
     this.messageChannel = cable.subscriptions.create('RoomChannel', {
       received: (data) => {
-        // Called when there's incoming data on the websocket for this channel
         this.$emit('getMessages')
       }
     })

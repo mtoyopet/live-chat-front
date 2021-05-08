@@ -9,7 +9,6 @@
 <script>
 import Navbar from '../components/Navbar'
 import ChatWindow from '../components/ChatWindow'
-import { useRouter } from 'vue-router'
 import NewChatForm from '../components/NewChatForm'
 import axios from 'axios'
 import { formatDistanceToNow } from 'date-fns'
@@ -17,13 +16,6 @@ import { ja } from 'date-fns/locale'
 
 export default {
   components: { Navbar, ChatWindow, NewChatForm },
-  setup() {
-    const router = useRouter()
-    const redirectToWelcome = () => {
-      router.push({ name: 'Welcome' })
-    }
-    return { redirectToWelcome }
-  },
   data () {
     return {
       messages: [],
@@ -41,6 +33,9 @@ export default {
     }
   },
   methods: {
+    redirectToWelcome () {
+      this.$router.push({ name: 'Welcome' })
+    },
     async getMessages () {
       try {
         const res = await axios.get('http://localhost:3000/messages', {
@@ -64,6 +59,6 @@ export default {
   },
   mounted () {
     this.getMessages()
-  },
+  }
 }
 </script>
