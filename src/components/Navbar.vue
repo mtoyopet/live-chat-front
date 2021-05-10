@@ -1,8 +1,8 @@
 <template>
   <nav>
     <div>
-      <p>こんにちは、{{ name }}さん</p>
-      <p class="email">現在、{{ email }}でログイン中です</p>
+      <p>こんにちは、<span class="name">{{ name }}</span>さん</p>
+      <p class="email">現在、 {{ email }} でログイン中です</p>
     </div>
     <button @click="logout">ログアウト</button>
   </nav>
@@ -65,6 +65,10 @@ export default {
     font-size: 16px;
     color: #444;
   }
+  nav span.name {
+    font-weight: bold;
+  }
+
   nav p.email {
     font-size: 14px;
     color: #999;
