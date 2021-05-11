@@ -39,7 +39,7 @@ export default {
         )
 
         if (!res) {
-          throw new Error('アカウント登録に失敗しました')
+          throw new Error('アカウントを登録できませんでした')
         }
 
         if (!this.error) {
