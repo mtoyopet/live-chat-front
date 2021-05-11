@@ -2,11 +2,13 @@
   <div class="chat-window">
     <div v-if="error">{{ error }}</div>
     <div v-if="messages" class="messages" ref="messages">
-      <div v-for="message in messages" :key="message.id" class="single">
-        <span class="name">{{ message.name }}</span>
-        <span class="message">{{ message.content }}</span>
-        <span class="created-at">{{ message.created_at }}前</span>
-      </div>
+      <ul v-for="message in messages" :key="message.id">
+        <li :class="{ received: message.email !== uid, sent: message.email == uid }">
+          <span class="name">{{ message.name }}</span>
+          <span class="message">{{ message.content }}</span>
+          <span class="created-at">{{ message.created_at }}前</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -17,40 +19,67 @@ export default {
   updated () {
     const element = this.$refs.messages
     element.scrollTop = element.scrollHeight
+  },
+  data () {
+    return {
+      uid: localStorage.getItem('uid'),
+    }
   }
 }
 </script>
 
 <style scoped>
   .chat-window {
-    background: #f5f3f3;
+    background: white;
     padding: 30px 20px;
+    border-bottom: 1px solid #eee;
   }
-  .single {
-    margin: 18px 0;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul li {
+    display:inline-block;
+    clear: both;
   }
 
+  .received .message {
+    background: #eee;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 30px;
+    margin-bottom: 2px;
+    max-width: 400px;
+  }
+
+  .received {
+    float: left;
+  }
+  .sent {
+    float: right;
+  }
+
+  .sent .message {
+    background: #677bb4;
+    color: white;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 30px;
+    margin-bottom: 2px;
+    max-width: 400px;
+  }
   .name {
     position: relative; 
-    font-weight: bold;
     margin-right: 6px;
     display: block;
-  }
-  .message {    
-    display: inline-block;
-    position: relative;
-    background-color:#51b392;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 0;
-    max-width: 320px;
-    color: white;
+    font-size: 13px;
   }
   .created-at {
     display: block;
     color: #999;
     font-size: 12px;
-    margin-bottom: 4px;
+    margin-bottom: 20px;
     margin-left: 4px;
   }
   .messages {
