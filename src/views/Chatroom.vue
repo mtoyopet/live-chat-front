@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <navbar @redirectToWelcome="redirectToWelcome" />
-    <chat-window :messages="formattedMessages" :error="error" />
+    <chat-window :messages="formattedMessages" :error="error" ref="chatWindow" />
     <new-chat-form @getMessages="getMessages" />
   </div>
 </template>
@@ -50,7 +50,8 @@ export default {
           new Error('メッセージ一覧を取得できませんでした')
         }
 
-        this.messages = res.data 
+        this.messages = res.data
+        this.$refs.chatWindow.scrollToBottom()
       } catch (err) {
         console.log(err)
         this.error = 'メッセージ一覧を取得できませんでした'
