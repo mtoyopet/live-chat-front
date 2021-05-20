@@ -23,6 +23,7 @@
 import axios from 'axios'
 
 export default {
+  emits: ['sendMessage'],
   props: ['messages', 'error'],
   data () {
     return {
@@ -55,17 +56,13 @@ export default {
           new Error('いいねできませんでした')
         }
 
-        this.messages.forEach(message => {
-          if (message.id === messageId) {
-            message.likes.push(res.data)
-          }
-        })
+        this.$emit('sendMessage')
 
       } catch (error) {
         console.log(error)
       }      
     },
-    async deleteLike(likeId, messageId) {
+    async deleteLike(likeId) {
       try {
         const res = await axios.delete(`http://localhost:3000/likes/${likeId}`,
           {
@@ -80,17 +77,7 @@ export default {
           new Error('いいねを削除できませんでした')
         }
 
-        for (let i = 0; i < this.messages.length; i++) {
-          const message = this.messages[i]
-
-          if (message.id === messageId) {
-            for (let k = 0; k < message.likes.length; k++) {
-              if (message.likes[k].id === likeId) {
-                message.likes.splice(k, 1)
-              }
-            }
-          }
-        } 
+        this.$emit('sendMessage')
       } catch (error) {
         console.log(error)
       }      

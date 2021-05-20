@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <navbar @redirectToWelcome="redirectToWelcome" />
-    <chat-window :messages="formattedMessages" :error="error" ref="chatWindow" />
+    <chat-window @sendMessage="sendMessage" :messages="formattedMessages" :error="error" ref="chatWindow" />
     <new-chat-form @sendMessage="sendMessage" />
   </div>
 </template>
@@ -70,12 +70,13 @@ export default {
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
     this.messageChannel = cable.subscriptions.create('RoomChannel', {
-      received: (data) => {
+      connected: () => {
+        this.getMessages()
+      },
+      received: () => {
         this.getMessages()
       }
     })
-
-    this.getMessages()
   },
     beforeDestory () {
     channel.unsubscribe()
