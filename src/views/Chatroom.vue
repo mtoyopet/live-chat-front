@@ -2,7 +2,7 @@
   <div class="container">
     <navbar @redirectToWelcome="redirectToWelcome" />
     <chat-window :messages="formattedMessages" :error="error" ref="chatWindow" />
-    <new-chat-form @getMessages="getMessages" />
+    <new-chat-form @sendMessage="sendMessage" />
   </div>
 </template>
 
@@ -13,12 +13,14 @@ import NewChatForm from '../components/NewChatForm'
 import axios from 'axios'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import ActionCable from 'actioncable'
 
 export default {
   components: { Navbar, ChatWindow, NewChatForm },
   data () {
     return {
       messages: [],
+      message: '',
       error: null
     }
   },
@@ -57,9 +59,26 @@ export default {
         this.error = 'メッセージ一覧を取得できませんでした'
       }
     },
+    sendMessage (value) {
+      this.messageChannel.perform('receive', {
+        message: value,
+        uid: window.localStorage.getItem('uid')
+      })
+    }
   },
   mounted () {
+    const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+
+    this.messageChannel = cable.subscriptions.create('RoomChannel', {
+      received: (data) => {
+        this.getMessages()
+      }
+    })
+
     this.getMessages()
+  },
+    beforeDestory () {
+    channel.unsubscribe()
   }
 }
 </script>

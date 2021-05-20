@@ -3,44 +3,24 @@
     <textarea
       placeholder="メッセージを入力してEnterを押してください"
       v-model="message"
-      @keypress.enter.prevent="handleSubmit"
+      @keypress.enter.prevent="handleSubmit($event.target.value)"
     ></textarea>
   </form>
-  <div class="error">{{ error }}</div>
 </template>
 
 <script>
-import ActionCable from 'actioncable'
-
 export default {
-  emits: ['getMessages'],
+  emits: ['sendMessage'],
   data () {
     return {
-      message: '',
-      error: null,
+      message: ''
     }
-  },
-  mounted () {
-    const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-
-    this.messageChannel = cable.subscriptions.create('RoomChannel', {
-      received: (data) => {
-        this.$emit('getMessages')
-      }
-    })
   },
   methods: {
-    handleSubmit () {
-      this.messageChannel.perform('receive', {
-        message: this.message,
-        uid: window.localStorage.getItem('uid')
-      })
-
+    handleSubmit (value) {
+      this.$emit('sendMessage', value)
       this.message = ''
     }
-  },
-  beforeDestory () {
-    channel.unsubscribe()
   }
 }
 </script>
