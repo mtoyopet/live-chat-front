@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  emits: ['sendMessage'],
+  emits: ['connectCable'],
   data () {
     return {
       message: ''
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     handleSubmit (value) {
-      this.$emit('sendMessage', value)
+      this.$emit('connectCable', value)
       this.message = ''
     }
   }

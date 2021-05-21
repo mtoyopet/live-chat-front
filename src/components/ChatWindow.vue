@@ -23,7 +23,7 @@
 import axios from 'axios'
 
 export default {
-  emits: ['sendMessage'],
+  emits: ['connectCable'],
   props: ['messages', 'error'],
   data () {
     return {
@@ -56,7 +56,7 @@ export default {
           new Error('いいねできませんでした')
         }
 
-        this.$emit('sendMessage')
+        this.$emit('connectCable')
 
       } catch (error) {
         console.log(error)
@@ -77,16 +77,20 @@ export default {
           new Error('いいねを削除できませんでした')
         }
 
-        this.$emit('sendMessage')
+        this.$emit('connectCable')
       } catch (error) {
         console.log(error)
       }      
 
     },
     scrollToBottom () {
+      console.log(11111)
       const element = this.$refs.messages
       element.scrollTop = element.scrollHeight
     }
+  },
+  mounted () {
+    this.scrollToBottom()
   }
 }
 </script>

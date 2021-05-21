@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <navbar @redirectToWelcome="redirectToWelcome" />
-    <chat-window @sendMessage="sendMessage" :messages="formattedMessages" :error="error" ref="chatWindow" />
-    <new-chat-form @sendMessage="sendMessage" />
+    <chat-window @connectCable="connectCable" :messages="formattedMessages" :error="error" ref="chatWindow" />
+    <new-chat-form @connectCable="connectCable" />
   </div>
 </template>
 
@@ -53,28 +53,32 @@ export default {
         }
 
         this.messages = res.data
-        this.$refs.chatWindow.scrollToBottom()
       } catch (err) {
-        console.log(err)
         this.error = 'メッセージ一覧を取得できませんでした'
       }
     },
-    sendMessage (value) {
+    connectCable (value) {
       this.messageChannel.perform('receive', {
         message: value,
         uid: window.localStorage.getItem('uid')
       })
-    }
+    },
   },
   mounted () {
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
     this.messageChannel = cable.subscriptions.create('RoomChannel', {
       connected: () => {
-        this.getMessages()
+        this.getMessages().then(() => {
+          this.$refs.chatWindow.scrollToBottom()
+        })
       },
-      received: () => {
-        this.getMessages()
+      received: (data) => {
+        this.getMessages().then(() => {
+          if (data.message) {
+            this.$refs.chatWindow.scrollToBottom()
+          }
+        })
       }
     })
   },
